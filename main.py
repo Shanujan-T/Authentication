@@ -16,6 +16,14 @@ def create_app():
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(user_bp, url_prefix='/users')
 
+    @jwt.additional_claims_loader
+    def make_additional_claims(identity):
+
+        if identity == "janedoe123":
+
+            return{"is_stuff" :True}
+        return{"is_stuff" :False}
+
     @jwt.expired_token_loader
     def expired_token_callback(jwt_header, jwt_data):
         return jsonify({"message":"token has expired", "error":"token_expired"}), 401
